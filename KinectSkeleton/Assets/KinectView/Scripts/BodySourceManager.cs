@@ -36,10 +36,8 @@ public class BodySourceManager : MonoBehaviour
             var frame = _Reader.AcquireLatestFrame();
             if (frame != null)
             {
-				print ("got a frame");
                 if (_Data == null)
                 {
-					print ("got a body");
                     _Data = new Body[_Sensor.BodyFrameSource.BodyCount];
                 }
                 

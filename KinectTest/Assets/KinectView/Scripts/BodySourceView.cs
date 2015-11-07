@@ -68,6 +68,7 @@ public class BodySourceView : MonoBehaviour
 		List<ulong> trackedIds = new List<ulong>();
 		foreach(var body in data)
 		{
+			print ("body");
 			if (body == null)
 			{
 				continue;
@@ -75,6 +76,7 @@ public class BodySourceView : MonoBehaviour
 			
 			if(body.IsTracked)
 			{
+				print ("is tracked");
 				bodyTracked = true;
 				
 				trackedIds.Add (body.TrackingId);
@@ -116,6 +118,7 @@ public class BodySourceView : MonoBehaviour
 	
 	private GameObject CreateBodyObject(ulong id)
 	{
+		print ("creating body object");
 		GameObject body = new GameObject("Body:" + id);
 		
 		for (Kinect.JointType jt = Kinect.JointType.SpineBase; jt <= Kinect.JointType.ThumbRight; jt++)

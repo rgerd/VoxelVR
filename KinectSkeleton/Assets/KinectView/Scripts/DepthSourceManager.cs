@@ -2,31 +2,26 @@
 using System.Collections;
 using Windows.Kinect;
 
-public class BodySourceManager : MonoBehaviour 
-{
+public class DepthSourceManager : MonoBehaviour
+{   
     private KinectSensor _Sensor;
-    private BodyFrameReader _Reader;
-    private Body[] _Data = null;
-    
-    public Body[] GetData()
+    private DepthFrameReader _Reader;
+    private ushort[] _Data;
+
+    public ushort[] GetData()
     {
         return _Data;
     }
-    
 
     void Start () 
     {
         _Sensor = KinectSensor.GetDefault();
-
-        if (_Sensor != null)
+        
+        if (_Sensor != null) 
         {
-            _Reader = _Sensor.BodyFrameSource.OpenReader();
-            
-            if (!_Sensor.IsOpen)
-            {
-                _Sensor.Open();
-            }
-        }   
+            _Reader = _Sensor.DepthFrameSource.OpenReader();
+            _Data = new ushort[_Sensor.DepthFrameSource.FrameDescription.LengthInPixels];
+        }
     }
     
     void Update () 
@@ -36,19 +31,11 @@ public class BodySourceManager : MonoBehaviour
             var frame = _Reader.AcquireLatestFrame();
             if (frame != null)
             {
-				print ("got a frame");
-                if (_Data == null)
-                {
-					print ("got a body");
-                    _Data = new Body[_Sensor.BodyFrameSource.BodyCount];
-                }
-                
-                frame.GetAndRefreshBodyData(_Data);
-                
+                frame.CopyFrameDataToArray(_Data);
                 frame.Dispose();
                 frame = null;
             }
-        }    
+        }
     }
     
     void OnApplicationQuit()
