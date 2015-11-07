@@ -18,7 +18,7 @@ public class LeftHandSync : MonoBehaviour {
 	void Update () {
 		Transform leftObj = bv.GetComponent<BodySourceView> ().jointObjs [7];
 		Transform rightObj = bv.GetComponent<BodySourceView> ().jointObjs [11];
-		if (rightObj != null) {
+		if (rightObj != null) { //test comment 1
 			Vector3 right = rightObj.position;
 			rightSphere.transform.position = right;
 		}
@@ -26,5 +26,5 @@ public class LeftHandSync : MonoBehaviour {
 			Vector3 left = leftObj.position;
 			leftSphere.transform.position = left;
 		}
-	}
+	} //test comment 2
 }
