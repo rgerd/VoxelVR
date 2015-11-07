@@ -9,6 +9,7 @@ public class BodySourceView : MonoBehaviour
     public GameObject BodySourceManager;
 	public GameObject jointPrefab;
 	public GameObject bodyPrefab;
+	public GameObject camera;
     
     private Dictionary<ulong, GameObject> _Bodies = new Dictionary<ulong, GameObject>();
     private BodySourceManager _BodyManager;
@@ -133,28 +134,6 @@ public class BodySourceView : MonoBehaviour
             
             jointObj.name = jt.ToString();
             jointObj.transform.parent = body.transform;
-			/*
-			if (jt == Kinect.JointType.HandLeft){
-				GameObject leftHand = GameObject.Instantiate (jointPrefab);
-				leftHand.transform.parent = jointObj.transform;
-				leftHand.transform.position = Vector3.zero;
-			}
-			if (jt == Kinect.JointType.HandRight){
-				GameObject rightHand = GameObject.Instantiate (jointPrefab);
-				rightHand.transform.parent = jointObj.transform;
-				rightHand.transform.position = Vector3.zero;
-			}
-			if (jt == Kinect.JointType.Head) {
-				GameObject head = GameObject.Instantiate (jointPrefab);
-				head.transform.parent = jointObj.transform;
-				head.transform.position = Vector3.zero;
-			}
-
-			if (jt == Kinect.JointType.SpineMid) {
-				GameObject bodyO = GameObject.Instantiate (bodyPrefab);
-				bodyO.transform.parent = jointObj.transform;
-				bodyO.transform.position = Vector3.zero;
-			}*/
 
         }
         return body;
@@ -162,6 +141,7 @@ public class BodySourceView : MonoBehaviour
     
     private void RefreshBodyObject(Kinect.Body body, GameObject bodyObject)
     {
+		string message = "";
         for (Kinect.JointType jt = Kinect.JointType.SpineBase; jt <= Kinect.JointType.ThumbRight; jt++)
         {
             Kinect.Joint sourceJoint = body.Joints[jt];
@@ -173,7 +153,6 @@ public class BodySourceView : MonoBehaviour
             }
             
             Transform jointObj = bodyObject.transform.FindChild(jt.ToString());
-			Transform connectionObj = bodyObject.transform.FindChild(jt.ToString()+"Connect");
 			jointObj.localPosition = GetVector3FromJoint(sourceJoint);
 
             LineRenderer lr = jointObj.GetComponent<LineRenderer>();
@@ -188,17 +167,16 @@ public class BodySourceView : MonoBehaviour
             {
                 lr.enabled = false;
             }
-			/*
-			if (jt == Kinect.JointType.HandLeft){
-				GameObject.Find ("leftHand").transform.position = jointObj.localPosition;
-			}
-			if (jt == Kinect.JointType.HandRight){
-				GameObject.Find ("rightHand").transform.position = jointObj.localPosition;
-			}
+			message += ((float) jt).ToString() + " " + jointObj.position.x.ToString() + " " + 
+				jointObj.position.y.ToString() + " " + jointObj.position.z.ToString() + " ";
+			SendString(message);
+
 			if (jt == Kinect.JointType.Head) {
-				GameObject.Find ("head").transform.position = jointObj.localPosition;
-			}*/
+				camera.transform.position = jointObj.transform.position + new Vector3(0, 0, 0);
+			}
+
         }
+
     }
     
     private static Color GetColorForState(Kinect.TrackingState state)
@@ -220,4 +198,8 @@ public class BodySourceView : MonoBehaviour
     {
         return new Vector3(joint.Position.X * 10, joint.Position.Y * 10, joint.Position.Z * 10);
     }
+
+	public static void SendString(string s) {
+		//implement here
+	}
 }
