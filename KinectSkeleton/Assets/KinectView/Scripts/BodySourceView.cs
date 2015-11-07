@@ -7,6 +7,8 @@ public class BodySourceView : MonoBehaviour
 {
     public Material BoneMaterial;
     public GameObject BodySourceManager;
+	public GameObject jointPrefab;
+	public GameObject bodyPrefab;
     
     private Dictionary<ulong, GameObject> _Bodies = new Dictionary<ulong, GameObject>();
     private BodySourceManager _BodyManager;
@@ -113,18 +115,46 @@ public class BodySourceView : MonoBehaviour
         
         for (Kinect.JointType jt = Kinect.JointType.SpineBase; jt <= Kinect.JointType.ThumbRight; jt++)
         {
-            GameObject jointObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            
+			GameObject jointObj;
+			if (jt == Kinect.JointType.Head || jt == Kinect.JointType.HandLeft || jt == Kinect.JointType.HandRight) {
+				jointObj = GameObject.Instantiate(jointPrefab);
+			} else {
+				jointObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+				jointObj.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+			}
+
             LineRenderer lr = jointObj.AddComponent<LineRenderer>();
             lr.SetVertexCount(2);
             lr.material = BoneMaterial;
             lr.SetWidth(0.05f, 0.05f);
+
             
-            jointObj.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
             jointObj.name = jt.ToString();
             jointObj.transform.parent = body.transform;
+			/*
+			if (jt == Kinect.JointType.HandLeft){
+				GameObject leftHand = GameObject.Instantiate (jointPrefab);
+				leftHand.transform.parent = jointObj.transform;
+				leftHand.transform.position = Vector3.zero;
+			}
+			if (jt == Kinect.JointType.HandRight){
+				GameObject rightHand = GameObject.Instantiate (jointPrefab);
+				rightHand.transform.parent = jointObj.transform;
+				rightHand.transform.position = Vector3.zero;
+			}
+			if (jt == Kinect.JointType.Head) {
+				GameObject head = GameObject.Instantiate (jointPrefab);
+				head.transform.parent = jointObj.transform;
+				head.transform.position = Vector3.zero;
+			}
+
+			if (jt == Kinect.JointType.SpineMid) {
+				GameObject bodyO = GameObject.Instantiate (bodyPrefab);
+				bodyO.transform.parent = jointObj.transform;
+				bodyO.transform.position = Vector3.zero;
+			}*/
+
         }
-        
         return body;
     }
     
@@ -141,19 +171,31 @@ public class BodySourceView : MonoBehaviour
             }
             
             Transform jointObj = bodyObject.transform.FindChild(jt.ToString());
-            jointObj.localPosition = GetVector3FromJoint(sourceJoint);
-            
+			Transform connectionObj = bodyObject.transform.FindChild(jt.ToString()+"Connect");
+			jointObj.localPosition = GetVector3FromJoint(sourceJoint);
+
             LineRenderer lr = jointObj.GetComponent<LineRenderer>();
             if(targetJoint.HasValue)
             {
                 lr.SetPosition(0, jointObj.localPosition);
                 lr.SetPosition(1, GetVector3FromJoint(targetJoint.Value));
                 lr.SetColors(GetColorForState (sourceJoint.TrackingState), GetColorForState(targetJoint.Value.TrackingState));
+
             }
             else
             {
                 lr.enabled = false;
             }
+			/*
+			if (jt == Kinect.JointType.HandLeft){
+				GameObject.Find ("leftHand").transform.position = jointObj.localPosition;
+			}
+			if (jt == Kinect.JointType.HandRight){
+				GameObject.Find ("rightHand").transform.position = jointObj.localPosition;
+			}
+			if (jt == Kinect.JointType.Head) {
+				GameObject.Find ("head").transform.position = jointObj.localPosition;
+			}*/
         }
     }
     
