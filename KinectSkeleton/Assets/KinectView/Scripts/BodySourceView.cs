@@ -118,7 +118,9 @@ public class BodySourceView : MonoBehaviour
 			GameObject jointObj;
 			if (jt == Kinect.JointType.Head || jt == Kinect.JointType.HandLeft || jt == Kinect.JointType.HandRight) {
 				jointObj = GameObject.Instantiate(jointPrefab);
-			} else {
+			} else if (jt == Kinect.JointType.SpineMid) {
+				jointObj = GameObject.Instantiate(bodyPrefab);
+			}else {
 				jointObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 				jointObj.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
 			}
