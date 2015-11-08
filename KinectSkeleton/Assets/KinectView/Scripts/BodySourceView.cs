@@ -169,14 +169,14 @@ public class BodySourceView : MonoBehaviour
             {
                 lr.enabled = false;
             }
-			message += ((float) jt).ToString() + " " + jointObj.position.x.ToString() + " " + 
-				jointObj.position.y.ToString() + " " + jointObj.position.z.ToString() + " ";
-
-
+			float xval = (int) ((jointObj.position.x)* 10000)/10000f;
+			float yval = (int) ((jointObj.position.y) * 10000)/10000f;
+			float zval = (int) ((jointObj.position.z) * 10000)/10000f;
+			message += xval.ToString() + " " + yval.ToString() + " " + zval.ToString() + " ";
+	
 			if (jt == Kinect.JointType.Head) {
 				camera.transform.position = jointObj.transform.position + new Vector3(0, 0, 0);
 			}
-
         }
     }
     
