@@ -15,10 +15,12 @@ public class GameManagerVik : Photon.MonoBehaviour {
         if (PhotonNetwork.countOfPlayers == 2)
         {
             OSCReceiver.playerID = "P2";
+			OSCReceiver.anchor = new Vector3(0, 0, -30);
         }
         else
         {
             OSCReceiver.playerID = "P1";
+			OSCReceiver.anchor = new Vector3(0, 0, 30);
         }
 
         Debug.Log("PLAYER ID " + OSCReceiver.playerID);

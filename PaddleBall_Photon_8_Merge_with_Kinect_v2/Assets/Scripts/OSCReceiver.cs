@@ -22,6 +22,16 @@ public class OSCReceiver : MonoBehaviour {
 	private Vector3 right_elbow_pos;
 	private Vector3 body_pos;
 
+	public static Vector3 anchor = new Vector3(0, 0, 0);
+
+	public static string playerID = null;
+	public static GameObject body = null;
+	public static GameObject leftHand = null;
+	public static GameObject rightHand = null;
+	public static GameObject leftElbow = null;
+	public static GameObject rightElbow = null;
+	public static GameObject head = null;
+
 	void Start () {
 		UDPPacketIO udp = (UDPPacketIO) GetComponent ("UDPPacketIO");
 		udp.init (RemoteIP, SendToPort, ListenerPort);
@@ -37,13 +47,7 @@ public class OSCReceiver : MonoBehaviour {
 		right_elbow_pos = new Vector3 (0, 0, 0);
 		body_pos = new Vector3 (0, 0, 0);
 	}
-    public static string playerID = null;
-    public static GameObject body = null;
-    public static GameObject leftHand = null;
-    public static GameObject rightHand = null;
-    public static GameObject leftElbow = null;
-    public static GameObject rightElbow = null;
-    public static GameObject head = null;
+
 	void Update () {
         if (playerID == null)
             return;
@@ -65,14 +69,14 @@ public class OSCReceiver : MonoBehaviour {
 			vals[i] = float.Parse(_vals[i]);
 		}
 
-		cam_pos = new Vector3 (vals[9], vals[10], -vals[11]);
+		cam_pos = new Vector3 (vals[9], vals[10], -vals[11]) + anchor;
 
-		left_hand_pos = new Vector3 (vals [33], vals [34], -vals [35]);
-		right_hand_pos = new Vector3(vals[21], vals[22], -vals[23]);
+		left_hand_pos = new Vector3 (vals [33] + anchor.x, vals [34], -vals [35]) + anchor;
+		right_hand_pos = new Vector3(vals[21], vals[22], -vals[23]) + anchor;
 
-		left_elbow_pos = new Vector3(vals[15], vals[16], -vals[17]);
-		right_elbow_pos = new Vector3 (vals [27], vals [28], -vals [29]);
+		left_elbow_pos = new Vector3(vals[15], vals[16], -vals[17]) + anchor;
+		right_elbow_pos = new Vector3 (vals [27], vals [28], -vals [29]) + anchor;
 
-		body_pos = new Vector3 (vals[3], vals[4], -vals[5]);
+		body_pos = new Vector3 (vals[3], vals[4], -vals[5]) + anchor;
 	}
 }
