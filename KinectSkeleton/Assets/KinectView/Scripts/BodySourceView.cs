@@ -10,6 +10,8 @@ public class BodySourceView : MonoBehaviour
 	public GameObject jointPrefab;
 	public GameObject bodyPrefab;
 	public GameObject camera;
+
+	public string message;
     
     private Dictionary<ulong, GameObject> _Bodies = new Dictionary<ulong, GameObject>();
     private BodySourceManager _BodyManager;
@@ -141,7 +143,7 @@ public class BodySourceView : MonoBehaviour
     
     private void RefreshBodyObject(Kinect.Body body, GameObject bodyObject)
     {
-		string message = "";
+		message = "";
         for (Kinect.JointType jt = Kinect.JointType.SpineBase; jt <= Kinect.JointType.ThumbRight; jt++)
         {
             Kinect.Joint sourceJoint = body.Joints[jt];
@@ -169,14 +171,13 @@ public class BodySourceView : MonoBehaviour
             }
 			message += ((float) jt).ToString() + " " + jointObj.position.x.ToString() + " " + 
 				jointObj.position.y.ToString() + " " + jointObj.position.z.ToString() + " ";
-			SendString(message);
+
 
 			if (jt == Kinect.JointType.Head) {
 				camera.transform.position = jointObj.transform.position + new Vector3(0, 0, 0);
 			}
 
         }
-
     }
     
     private static Color GetColorForState(Kinect.TrackingState state)
@@ -199,7 +200,8 @@ public class BodySourceView : MonoBehaviour
         return new Vector3(joint.Position.X * 10, joint.Position.Y * 10, joint.Position.Z * 10);
     }
 
-	public static void SendString(string s) {
-		//implement here
+	public string getString() {
+		return message;
 	}
+	
 }
