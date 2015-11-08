@@ -26,7 +26,7 @@ public function Start()
 function Update()
 {
     var message : String = BodyView.GetComponent("BodySourceView").getString();
-    Debug.Log("/" + message);
+    //Debug.Log("/" + message);
     var oscM : OscMessage = null;
     oscM = Osc.StringToOscMessage("/" + message);
     oscHandler.Send(oscM);

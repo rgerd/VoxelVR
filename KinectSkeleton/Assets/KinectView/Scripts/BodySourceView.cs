@@ -47,6 +47,8 @@ public class BodySourceView : MonoBehaviour
         { Kinect.JointType.SpineShoulder, Kinect.JointType.Neck },
         { Kinect.JointType.Neck, Kinect.JointType.Head },
     };
+
+	ulong trackID = 0;
     
     void Update () 
     {
@@ -90,20 +92,33 @@ public class BodySourceView : MonoBehaviour
             {
                 Destroy(_Bodies[trackingId]);
                 _Bodies.Remove(trackingId);
+				if (trackID == trackingId) {
+					trackID = 0;
+				}
             }
         }
 
-		Kinect.Body bod = data [0];
+        foreach (var body in data) {
+			if (trackID == 0) {
+				trackID = body.TrackingId;
+			} 
+			if (trackID == body.TrackingId) {
+				if (true) {
+					if (body == null) {
+						continue;
+
+					}
             
-        if(bod.IsTracked && bod != null)
-        {
-            if(!_Bodies.ContainsKey(bod.TrackingId))
-            {
-                _Bodies[bod.TrackingId] = CreateBodyObject(bod.TrackingId);
-            }
+					if (body.IsTracked) {
+						if (!_Bodies.ContainsKey (body.TrackingId)) {
+							_Bodies [body.TrackingId] = CreateBodyObject (body.TrackingId);
+						}
                 
-            RefreshBodyObject(bod, _Bodies[bod.TrackingId]);
-        }   
+						RefreshBodyObject (body, _Bodies [body.TrackingId]);
+					}
+				}
+			}
+		}
     }
     
     private GameObject CreateBodyObject(ulong id)
