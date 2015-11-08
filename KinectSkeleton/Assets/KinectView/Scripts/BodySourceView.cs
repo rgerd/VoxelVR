@@ -93,23 +93,17 @@ public class BodySourceView : MonoBehaviour
             }
         }
 
-        foreach(var body in data)
-        {
-            if (body == null)
-            {
-                continue;
-            }
+		Kinect.Body bod = data [0];
             
-            if(body.IsTracked)
+        if(bod.IsTracked && bod != null)
+        {
+            if(!_Bodies.ContainsKey(bod.TrackingId))
             {
-                if(!_Bodies.ContainsKey(body.TrackingId))
-                {
-                    _Bodies[body.TrackingId] = CreateBodyObject(body.TrackingId);
-                }
-                
-                RefreshBodyObject(body, _Bodies[body.TrackingId]);
+                _Bodies[bod.TrackingId] = CreateBodyObject(bod.TrackingId);
             }
-        }
+                
+            RefreshBodyObject(bod, _Bodies[bod.TrackingId]);
+        }   
     }
     
     private GameObject CreateBodyObject(ulong id)
