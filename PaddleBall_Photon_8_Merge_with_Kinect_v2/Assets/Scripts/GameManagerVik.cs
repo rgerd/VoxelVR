@@ -27,6 +27,7 @@ public class GameManagerVik : Photon.MonoBehaviour {
         Debug.Log("PLAYER ID " + OSCReceiver.playerID);
         GameObject head = PhotonNetwork.Instantiate("Head", new Vector3(0, 0, 0), Quaternion.identity, 0);
         head.gameObject.tag = OSCReceiver.playerID + "Head";
+		Camera.main.transform.parent = head;
         OSCReceiver.head = head;
 
         GameObject body = PhotonNetwork.Instantiate("Body", new Vector3(0, 0, 0), Quaternion.identity, 0);
