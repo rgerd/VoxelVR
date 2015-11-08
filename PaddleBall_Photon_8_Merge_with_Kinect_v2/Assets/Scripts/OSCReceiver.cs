@@ -61,6 +61,8 @@ public class OSCReceiver : MonoBehaviour {
     }
 
     public void AllMessageHandler(OscMessage oscMessage) {
+		if (playerID == null)
+			return;
 		string msg = Osc.OscMessageToString (oscMessage).Substring (1);
 		string[] _vals = msg.Split (' ');
 
@@ -69,14 +71,14 @@ public class OSCReceiver : MonoBehaviour {
 			vals[i] = float.Parse(_vals[i]);
 		}
 
-		cam_pos = new Vector3 (vals[9], vals[10], -vals[11]) + anchor;
+		cam_pos = new Vector3 (vals[9] * (playerID == "P1" ? -1 : 1), vals[10], -vals[11] * (playerID == "P1" ? -1 : 1) + 19) + anchor;
 
-		left_hand_pos = new Vector3 (vals [33] + anchor.x, vals [34], -vals [35]) + anchor;
-		right_hand_pos = new Vector3(vals[21], vals[22], -vals[23]) + anchor;
+		left_hand_pos = new Vector3 (vals [33] * (playerID == "P1" ? -1 : 1) + anchor.x, vals [34], -vals [35] * (playerID == "P1" ? -1 : 1) + 19) + anchor;
+		right_hand_pos = new Vector3(vals[21] * (playerID == "P1" ? -1 : 1), vals[22], -vals[23] * (playerID == "P1" ? -1 : 1) + 19) + anchor;
 
-		left_elbow_pos = new Vector3(vals[15], vals[16], -vals[17]) + anchor;
-		right_elbow_pos = new Vector3 (vals [27], vals [28], -vals [29]) + anchor;
+		left_elbow_pos = new Vector3(vals[15] * (playerID == "P1" ? -1 : 1), vals[16], -vals[17] * (playerID == "P1" ? -1 : 1) + 19) + anchor;
+		right_elbow_pos = new Vector3 (vals [27] * (playerID == "P1" ? -1 : 1), vals [28], -vals [29] * (playerID == "P1" ? -1 : 1) + 19) + anchor;
 
-		body_pos = new Vector3 (vals[3], vals[4], -vals[5]) + anchor;
+		body_pos = new Vector3 (vals[3] * (playerID == "P1" ? -1 : 1), vals[4], -vals[5] * (playerID == "P1" ? -1 : 1) + 19) + anchor;
 	}
 }
