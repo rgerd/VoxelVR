@@ -162,19 +162,6 @@ public class BodySourceView : MonoBehaviour {
 		}
 	}
 
-	private static Color GetColorForState(Kinect.TrackingState state) {
-		switch (state) {
-		  case Kinect.TrackingState.Tracked:
-		  return Color.green;
-
-		  case Kinect.TrackingState.Inferred:
-		  return Color.red;
-
-		  default:
-		  return Color.black;
-		}
-	}
-
 	private static Vector3 GetVector3FromJoint(Kinect.Joint joint) {
 		return new Vector3(joint.Position.X * 10, joint.Position.Y * 10, joint.Position.Z * 10);
 	}
