@@ -9,10 +9,12 @@ public class BodySourceView : MonoBehaviour
     public GameObject BodySourceManager;
 	public GameObject jointPrefab;
 	public GameObject bodyPrefab;
-	public GameObject camera;
+    public GameObject bone_prefab;
+    public GameObject camera;
 
 	public string message;
-    
+
+    private GameObject[] bones;
     private Dictionary<ulong, GameObject> _Bodies = new Dictionary<ulong, GameObject>();
     private BodySourceManager _BodyManager;
     
@@ -147,6 +149,27 @@ public class BodySourceView : MonoBehaviour
             jointObj.transform.parent = body.transform;
 
         }
+
+        bones = new GameObject[2];
+        for (int i = 0; i < bones.Length; i++)
+        {
+            bones[i] = (GameObject)Instantiate(bone_prefab, Vector3.zero, Quaternion.identity);
+            BoneScript script = bones[i].GetComponent("BoneScript") as BoneScript;
+            if (i == 0)
+            {
+                Debug.Log(script);
+                script.joint1 = body.transform.FindChild(Kinect.JointType.HandLeft.ToString()).gameObject;
+                script.joint2 = body.transform.FindChild(Kinect.JointType.ElbowLeft.ToString()).gameObject;
+            }
+            else if (i == 1)
+            {
+                script.joint1 = body.transform.FindChild(Kinect.JointType.HandRight.ToString()).gameObject;
+                script.joint2 = body.transform.FindChild(Kinect.JointType.ElbowRight.ToString()).gameObject;
+            }
+            
+            script.radius = 0.5f;
+        }
+
         return body;
     }
     
