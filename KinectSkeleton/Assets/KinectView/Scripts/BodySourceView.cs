@@ -126,18 +126,12 @@ public class BodySourceView : MonoBehaviour
     private GameObject CreateBodyObject(ulong id)
     {
         GameObject body = new GameObject("Body:" + id);
+
         
         for (Kinect.JointType jt = Kinect.JointType.SpineBase; jt <= Kinect.JointType.ThumbRight; jt++)
         {
-			GameObject jointObj;
-			if (jt == Kinect.JointType.Head || jt == Kinect.JointType.HandLeft || jt == Kinect.JointType.HandRight) {
-				jointObj = GameObject.Instantiate(jointPrefab);
-			} else if (jt == Kinect.JointType.SpineMid) {
-				jointObj = GameObject.Instantiate(bodyPrefab);
-			}else {
-				jointObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-				jointObj.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
-			}
+			GameObject jointObj = GameObject.Instantiate(new GameObject());
+			
 
             LineRenderer lr = jointObj.AddComponent<LineRenderer>();
             lr.SetVertexCount(2);
@@ -149,26 +143,33 @@ public class BodySourceView : MonoBehaviour
             jointObj.transform.parent = body.transform;
 
         }
+        Transform bodyTransform = body.transform;
+        
+        bones = new GameObject[5];
+        bones[0] = (GameObject)Instantiate(bone_prefab, Vector3.zero, Quaternion.identity);
+        bones[0].name = "LeftArmTop";
+        bones[0].transform.parent = body.transform;
+        BoneScript script0 = bones[0].GetComponent("BoneScript") as BoneScript;
+        script0.joint1 = bodyTransform.FindChild(Kinect.JointType.ShoulderLeft.ToString()).gameObject;
+        script0.joint2 = bodyTransform.FindChild(Kinect.JointType.ElbowLeft.ToString()).gameObject;
+        script0.radius = 0.5f;
 
-        bones = new GameObject[2];
-        for (int i = 0; i < bones.Length; i++)
-        {
-            bones[i] = (GameObject)Instantiate(bone_prefab, Vector3.zero, Quaternion.identity);
-            BoneScript script = bones[i].GetComponent("BoneScript") as BoneScript;
-            if (i == 0)
-            {
-                Debug.Log(script);
-                script.joint1 = body.transform.FindChild(Kinect.JointType.HandLeft.ToString()).gameObject;
-                script.joint2 = body.transform.FindChild(Kinect.JointType.ElbowLeft.ToString()).gameObject;
-            }
-            else if (i == 1)
-            {
-                script.joint1 = body.transform.FindChild(Kinect.JointType.HandRight.ToString()).gameObject;
-                script.joint2 = body.transform.FindChild(Kinect.JointType.ElbowRight.ToString()).gameObject;
-            }
-            
-            script.radius = 0.5f;
-        }
+        bones[1] = (GameObject)Instantiate(bone_prefab, Vector3.zero, Quaternion.identity);
+        bones[1].name = "LeftArmBottom";
+        bones[1].transform.parent = body.transform;
+        BoneScript script1 = bones[1].GetComponent("BoneScript") as BoneScript;
+        script1.joint1 = bodyTransform.FindChild(Kinect.JointType.ElbowLeft.ToString()).gameObject;
+        script1.joint2 = bodyTransform.FindChild(Kinect.JointType.HandLeft.ToString()).gameObject;
+        script1.radius = 0.5f;
+
+        bones[2] = (GameObject)Instantiate(bone_prefab, Vector3.zero, Quaternion.identity);
+        bones[2].name = "Body";
+        bones[2].transform.parent = body.transform;
+        BoneScript script2 = bones[2].GetComponent("BoneScript") as BoneScript;
+        script2.joint1 = bodyTransform.FindChild(Kinect.JointType.SpineBase.ToString()).gameObject;
+        script2.joint2 = bodyTransform.FindChild(Kinect.JointType.SpineShoulder.ToString()).gameObject;
+        script2.radius = 1.5f;
+
 
         return body;
     }
