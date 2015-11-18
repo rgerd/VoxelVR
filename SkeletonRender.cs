@@ -59,7 +59,7 @@ public class SkeletonRender : MonoBehaviour
             return;
         }
         
-        _BodyManager = BodySourceManager.GetComponent<BodySourceManager>();
+        _BodyManager = BodySourceManager.GetComponent<SkeletonManager>();
         if (_BodyManager == null)
         {
             return;
