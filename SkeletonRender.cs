@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Kinect = Windows.Kinect;
 
+// AKA BodySourceView
 public class SkeletonRender : MonoBehaviour {
 	public GameObject BodySourceManager;
 	public GameObject bone_prefab;
