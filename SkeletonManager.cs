@@ -2,7 +2,8 @@ using UnityEngine;
 using System.Collections;
 using Windows.Kinect;
 
-public class BodySourceManager : MonoBehaviour 
+// AKA BodySourceManager
+public class SkeletonManager : MonoBehaviour 
 {
     private KinectSensor _Sensor;
     private BodyFrameReader _Reader;
