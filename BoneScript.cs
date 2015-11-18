@@ -2,15 +2,9 @@ using UnityEngine;
 using System.Collections;
 
 public class BoneScript : MonoBehaviour {
-
 	public GameObject joint1;
 	public GameObject joint2;
 	public float radius = 1;
-
-	void Start () {
-	
-	}
-
 	void Update () {
 		Vector3 midpoint = (joint1.transform.position + joint2.transform.position) / 2;
 		transform.position = midpoint;
