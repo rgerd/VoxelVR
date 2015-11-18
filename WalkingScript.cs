@@ -1,3 +1,5 @@
+using UnityEngine;
+using System.Collections;
 
 public class WalkingScript : MonoBehaviour {
 	public GameObject body;
@@ -35,10 +37,10 @@ public class WalkingScript : MonoBehaviour {
 
 			if(Mathf.Abs (ldx) > Mathf.Abs (rdx)) {
 				// Move left
-				body.transform.position.x += 10 * Time.deltaTime;
+				body.transform.Translate(10 * Time.deltaTime, 0, 0);
 			} else {
 				// Move right
-				body.transform.position.x -= 10 * Time.deltaTime;
+				body.transform.Translate(-10 * Time.deltaTime, 0, 0);
 			}
 		}
 
@@ -52,18 +54,18 @@ public class WalkingScript : MonoBehaviour {
 			if(Mathf.Abs (ldz) > Mathf.Abs (rdz)) {
 				if(ldz < 0) {
 					// Move forward
-					body.transform.position.z += 10 * Time.deltaTime;
+					body.transform.Translate(0, 0, 10 * Time.deltaTime);
 				} else {
 					// Move backward
-					body.transform.position.z -= 10 * Time.deltaTime;
+					body.transform.Translate(0, 0, -10 * Time.deltaTime);
 				}
 			} else {
 				if(rdz < 0) {
 					// Move forward
-					body.transform.position.z += 10 * Time.deltaTime;
+					body.transform.Translate(0, 0, 10 * Time.deltaTime);
 				} else {
 					// Move backward
-					body.transform.position.z -= 10 * Time.deltaTime;
+					body.transform.Translate(0, 0, -10 * Time.deltaTime);
 				}
 			}
 		}
