@@ -50,136 +50,136 @@ public class BodySourceView : MonoBehaviour {
 	ulong trackID = 0;
 
 	void Update () {
-	if (BodySourceManager == null) return;
-	_BodyManager = BodySourceManager.GetComponent<BodySourceManager>();
-	if (_BodyManager == null) return;
+		if (BodySourceManager == null) return;
+		_BodyManager = BodySourceManager.GetComponent<BodySourceManager>();
+		if (_BodyManager == null) return;
 
-	Kinect.Body[] data = _BodyManager.GetData();
-	if (data == null) return;
+		Kinect.Body[] data = _BodyManager.GetData();
+		if (data == null) return;
 
-	List<ulong> trackedIds = new List<ulong>();
-	foreach(var body in data) {
-	  if (body == null) continue;
+		List<ulong> trackedIds = new List<ulong>();
+		foreach(var body in data) {
+		  if (body == null) continue;
 
-	  if(body.IsTracked)
-	    trackedIds.Add (body.TrackingId);
-	}
+		  if(body.IsTracked)
+		    trackedIds.Add (body.TrackingId);
+		}
 
-	List<ulong> knownIds = new List<ulong>(_Bodies.Keys);
+		List<ulong> knownIds = new List<ulong>(_Bodies.Keys);
 
-	// First delete untracked bodies
-	foreach(ulong trackingId in knownIds) {
-	  if(!trackedIds.Contains(trackingId)) {
-	    Destroy(_Bodies[trackingId]);
-	    _Bodies.Remove(trackingId);
-	    if (trackID == trackingId)
-	      trackID = 0;
-	  }
-	}
+		// First delete untracked bodies
+		foreach(ulong trackingId in knownIds) {
+		  if(!trackedIds.Contains(trackingId)) {
+		    Destroy(_Bodies[trackingId]);
+		    _Bodies.Remove(trackingId);
+		    if (trackID == trackingId)
+		      trackID = 0;
+		  }
+		}
 
-	foreach (var body in data) {
-	  if (trackID == 0) {
-	    trackID = body.TrackingId;
-	  }
-	  if (trackID == body.TrackingId) {
-	    if (body == null) continue;
+		foreach (var body in data) {
+		  if (trackID == 0) {
+		    trackID = body.TrackingId;
+		  }
+		  if (trackID == body.TrackingId) {
+		    if (body == null) continue;
 
-	    if (body.IsTracked) {
-	      if (!_Bodies.ContainsKey (body.TrackingId)) {
-	        _Bodies [body.TrackingId] = CreateBodyObject (body.TrackingId);
-	      }
-	      RefreshBodyObject (body, _Bodies [body.TrackingId]);
-	    }
-	  }
-	}
+		    if (body.IsTracked) {
+		      if (!_Bodies.ContainsKey (body.TrackingId)) {
+		        _Bodies [body.TrackingId] = CreateBodyObject (body.TrackingId);
+		      }
+		      RefreshBodyObject (body, _Bodies [body.TrackingId]);
+		    }
+		  }
+		}
 	}
 
 	private GameObject CreateBodyObject(ulong id) {
-	GameObject body = new GameObject("Body:" + id);
+		GameObject body = new GameObject("Body:" + id);
 
-	for (Kinect.JointType jt = Kinect.JointType.SpineBase; jt <= Kinect.JointType.ThumbRight; jt++) {
-	    GameObject jointObj = GameObject.Instantiate(new GameObject());
-	    jointObj.name = jt.ToString();
-	    jointObj.transform.parent = body.transform;
-	}
+		for (Kinect.JointType jt = Kinect.JointType.SpineBase; jt <= Kinect.JointType.ThumbRight; jt++) {
+		    GameObject jointObj = GameObject.Instantiate(new GameObject());
+		    jointObj.name = jt.ToString();
+		    jointObj.transform.parent = body.transform;
+		}
 
-	Transform bodyTransform = body.transform;
+		Transform bodyTransform = body.transform;
 
-	bones = new GameObject[5];
-	bones[0] = addBone("LeftArmTop", 0.5f, bone_prefab, bodyTransform,
-	bodyTransform.FindChild(Kinect.JointType.ShoulderLeft.ToString()).gameObject,
-	bodyTransform.FindChild(Kinect.JointType.ElbowLeft.ToString()).gameObject);
+		bones = new GameObject[5];
+		bones[0] = addBone("LeftArmTop", 0.5f, bone_prefab, bodyTransform,
+		bodyTransform.FindChild(Kinect.JointType.ShoulderLeft.ToString()).gameObject,
+		bodyTransform.FindChild(Kinect.JointType.ElbowLeft.ToString()).gameObject);
 
-	bones[1] = addBone("LeftArmBottom", 0.5f, bone_prefab, bodyTransform,
-	bodyTransform.FindChild(Kinect.JointType.ElbowLeft.ToString()).gameObject,
-	bodyTransform.FindChild(Kinect.JointType.HandLeft.ToString()).gameObject);
+		bones[1] = addBone("LeftArmBottom", 0.5f, bone_prefab, bodyTransform,
+		bodyTransform.FindChild(Kinect.JointType.ElbowLeft.ToString()).gameObject,
+		bodyTransform.FindChild(Kinect.JointType.HandLeft.ToString()).gameObject);
 
-	bones[2] = addBone("RightArmTop", 0.5f, bone_prefab, bodyTransform,
-	bodyTransform.FindChild(Kinect.JointType.ShoulderRight.ToString()).gameObject,
-	bodyTransform.FindChild(Kinect.JointType.ElbowRight.ToString()).gameObject);
+		bones[2] = addBone("RightArmTop", 0.5f, bone_prefab, bodyTransform,
+		bodyTransform.FindChild(Kinect.JointType.ShoulderRight.ToString()).gameObject,
+		bodyTransform.FindChild(Kinect.JointType.ElbowRight.ToString()).gameObject);
 
-	bones[3] = addBone("RightArmBottom", 0.5f, bone_prefab, bodyTransform,
-	bodyTransform.FindChild(Kinect.JointType.ElbowRight.ToString()).gameObject,
-	bodyTransform.FindChild(Kinect.JointType.HandRight.ToString()).gameObject);
+		bones[3] = addBone("RightArmBottom", 0.5f, bone_prefab, bodyTransform,
+		bodyTransform.FindChild(Kinect.JointType.ElbowRight.ToString()).gameObject,
+		bodyTransform.FindChild(Kinect.JointType.HandRight.ToString()).gameObject);
 
-	bones[4] = addBone("Body", 1.5f, bone_prefab, bodyTransform,
-	bodyTransform.FindChild(Kinect.JointType.SpineBase.ToString()).gameObject,
-	bodyTransform.FindChild(Kinect.JointType.SpineShoulder.ToString()).gameObject);
+		bones[4] = addBone("Body", 1.5f, bone_prefab, bodyTransform,
+		bodyTransform.FindChild(Kinect.JointType.SpineBase.ToString()).gameObject,
+		bodyTransform.FindChild(Kinect.JointType.SpineShoulder.ToString()).gameObject);
 
-	return body;
+		return body;
 	}
 
 	private GameObject addBone(String name, float radius, GameObject prefab, Transform body, GameObject joint1, GameObject joint2) {
-	GameObject bone = (GameObject) Instantiate(prefab, Vector3.zero, Quaternion.identity);
-	bone.name = name;
-	bone.transform.parent = body;
-	BoneScript script = bone.getComponent("BoneScript") as BoneScript;
-	script.joint1 = joint1;
-	script.joint2 = joint2;
-	script.radius = radius;
-	return bone;
+		GameObject bone = (GameObject) Instantiate(prefab, Vector3.zero, Quaternion.identity);
+		bone.name = name;
+		bone.transform.parent = body;
+		BoneScript script = bone.getComponent("BoneScript") as BoneScript;
+		script.joint1 = joint1;
+		script.joint2 = joint2;
+		script.radius = radius;
+		return bone;
 	}
 
 	private void RefreshBodyObject(Kinect.Body body, GameObject bodyObject) {
-	message = "";
-	for (Kinect.JointType jt = Kinect.JointType.SpineBase; jt <= Kinect.JointType.ThumbRight; jt++) {
-	  Kinect.Joint sourceJoint = body.Joints[jt];
-	  Kinect.Joint? targetJoint = null;
+		message = "";
+		for (Kinect.JointType jt = Kinect.JointType.SpineBase; jt <= Kinect.JointType.ThumbRight; jt++) {
+		  Kinect.Joint sourceJoint = body.Joints[jt];
+		  Kinect.Joint? targetJoint = null;
 
-	  if(_BoneMap.ContainsKey(jt))
-	    targetJoint = body.Joints[_BoneMap[jt]];
+		  if(_BoneMap.ContainsKey(jt))
+		    targetJoint = body.Joints[_BoneMap[jt]];
 
-	  Transform jointObj = bodyObject.transform.FindChild(jt.ToString());
-	  jointObj.localPosition = GetVector3FromJoint(sourceJoint);
+		  Transform jointObj = bodyObject.transform.FindChild(jt.ToString());
+		  jointObj.localPosition = GetVector3FromJoint(sourceJoint);
 
-	  float xval = (int) ((jointObj.position.x)* 10000) / 10000f;
-	  float yval = (int) ((jointObj.position.y) * 10000) / 10000f;
-	  float zval = (int) ((jointObj.position.z) * 10000) / 10000f;
-	  message += xval.ToString() + " " + yval.ToString() + " " + zval.ToString() + " ";
+		  float xval = (int) ((jointObj.position.x)* 10000) / 10000f;
+		  float yval = (int) ((jointObj.position.y) * 10000) / 10000f;
+		  float zval = (int) ((jointObj.position.z) * 10000) / 10000f;
+		  message += xval.ToString() + " " + yval.ToString() + " " + zval.ToString() + " ";
 
-	  if (jt == Kinect.JointType.Head)
-	    camera.transform.position = (Vector3) jointObj.transform.position;
-	}
+		  if (jt == Kinect.JointType.Head)
+		    camera.transform.position = (Vector3) jointObj.transform.position;
+		}
 	}
 
 	private static Color GetColorForState(Kinect.TrackingState state) {
-	switch (state) {
-	  case Kinect.TrackingState.Tracked:
-	  return Color.green;
+		switch (state) {
+		  case Kinect.TrackingState.Tracked:
+		  return Color.green;
 
-	  case Kinect.TrackingState.Inferred:
-	  return Color.red;
+		  case Kinect.TrackingState.Inferred:
+		  return Color.red;
 
-	  default:
-	  return Color.black;
-	}
+		  default:
+		  return Color.black;
+		}
 	}
 
 	private static Vector3 GetVector3FromJoint(Kinect.Joint joint) {
-	return new Vector3(joint.Position.X * 10, joint.Position.Y * 10, joint.Position.Z * 10);
+		return new Vector3(joint.Position.X * 10, joint.Position.Y * 10, joint.Position.Z * 10);
 	}
 
 	public string getString() {
-	return message;
+		return message;
 	}
 }
