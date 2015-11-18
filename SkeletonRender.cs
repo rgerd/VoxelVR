@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Kinect = Windows.Kinect;
 
-// AKA BodySourceView
 public class SkeletonRender : MonoBehaviour {
 	public GameObject BodySourceManager;
 	public GameObject bone_prefab;
@@ -144,7 +143,7 @@ public class SkeletonRender : MonoBehaviour {
 			Transform jointObj = bodyObject.transform.FindChild(jt.ToString());
 			jointObj.localPosition = GetVector3FromJoint(sourceJoint);
 			
-			float xval = (int) ((jointObj.position.x)* 10000) / 10000f;
+			float xval = (int) ((jointObj.position.x) * 10000) / 10000f;
 			float yval = (int) ((jointObj.position.y) * 10000) / 10000f;
 			float zval = (int) ((jointObj.position.z) * 10000) / 10000f;
 			message += xval.ToString() + " " + yval.ToString() + " " + zval.ToString() + " ";
